@@ -56,9 +56,8 @@ def update_tracker_info(tracker_info, timestamp, mongo_client, market, cycle_hou
 
     time_diff = abs(mongo_timestamps[0] - cycle_start_time)
     if time_diff > diff_tolerance * 1000:
-        print(f'Sufficient amount of data will be ready in {time_diff / 1000} seconds.')
-        # print(f'Sleep for {time_diff / 1000} seconds.')
-        # time.sleep(time_diff / 1000)
+        print(f'Sleep for {time_diff / 1000} seconds.')
+        time.sleep(time_diff / 1000)
         return False
 
     if tracker_info['cycle_end_time'] is None or \
