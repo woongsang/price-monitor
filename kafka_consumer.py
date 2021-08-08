@@ -85,7 +85,7 @@ def start_buy_signal(market):
                                username=config['MONGO_DB_USER'],
                                password=config['MONGO_DB_PASSWORD'])
 
-    consumer = KafkaConsumer(market,
+    consumer = KafkaConsumer(config['EXCHANGE'],
                              bootstrap_servers=[f"{config['KAFKA_HOST']}:{config['KAFKA_PORT']}"],
                              auto_offset_reset='latest',
                              enable_auto_commit=True,
