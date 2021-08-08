@@ -23,7 +23,7 @@ def on_open(web_socket):
     print("opened")
     subscribe_message = {
         "method": "SUBSCRIBE",
-        "params": config['SUBSCRIPTION_LIST'].split(','),
+        "params": [f'{market}@trade' for market in config['SUBSCRIPTION_LIST'].split(',')],
         "id": 1
     }
 
@@ -120,7 +120,7 @@ def update_prices(ws, data):
     }
     print(parsed_data)
 
-    producer.send(parsed_data['market'], value=json.dumps(parsed_data).encode('gbk'))
+    producer.send(parsed_data['market'], value=json.dumps(parsed_data).encode('utf-8'))
     producer.flush()
     exec(f"mongo_client.{config['EXCHANGE']}.{parsed_data['market']}.insert_one({parsed_data})")
 
