@@ -122,7 +122,8 @@ def update_prices(ws, data):
 
     producer.send(config['EXCHANGE'], value=json.dumps(parsed_data).encode('utf-8'))
     producer.flush()
-    exec(f"mongo_client.{config['EXCHANGE']}.{parsed_data['market']}.insert_one({parsed_data})")
+    mongo_client[config['EXCHANGE']][parsed_data['market']].insert_one(parsed_data)
+    # exec(f"mongo_client.{config['EXCHANGE']}.{parsed_data['market']}.insert_one({parsed_data})")
 
 
 ws = websocket.WebSocketApp(socket,
