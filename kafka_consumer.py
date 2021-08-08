@@ -43,9 +43,9 @@ def larry_signal(tracker_info, current_data, buy_config, url):
             'purchase_price': current_data['price'],
             'signal': 'long' if val == 1 else 'short'
         }
-        # res = requests.post(url, data=json.dumps(meta_data))
-        # if res.status_code == 200:
-        tracker_info['sent_signal'] = True
+        res = requests.post(url, data=json.dumps(meta_data))
+        if res.status_code == 200:
+            tracker_info['sent_signal'] = True
         print(meta_data)
     return val
 
