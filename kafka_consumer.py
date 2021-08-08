@@ -73,7 +73,7 @@ def update_tracker_info(tracker_info, timestamp, mongo_client, market, cycle_hou
 
 
 @background
-def start_buy_signal(market):
+def start_buy_signal(market, cycle_hours):
     market = market.upper()
 
     config = dotenv_values(".env")
@@ -106,13 +106,15 @@ def start_buy_signal(market):
         current_data = json.loads(message.value)
 
         for i, buy_config in enumerate(larry_configs):
+            if buy_config['cycle_hours'] != cycle_hours:
+                continue
             update_time = tracker_info_list[i]['update_time']
-            if update_time is None or current_data['timestamp'] - update_time > buy_config['cycle_hours']:
+            if update_time is None or current_data['timestamp'] - update_time > cycle_hours:
                 success = update_tracker_info(tracker_info_list[i],
                                               current_data['timestamp'],
                                               mongo_client,
                                               market,
-                                              buy_config['cycle_hours'])
+                                              cycle_hours)
                 if not success:
                     continue
             if not tracker_info_list[i]['sent_signal']:
@@ -121,11 +123,11 @@ def start_buy_signal(market):
                 print(f'{market}: {signal}')
 
 
-def main(markets):
+def main(markets, cycle_hours):
     for market in markets:
-        start_buy_signal(market)
+        start_buy_signal(market, int(cycle_hours))
 
 
 if __name__ == '__main__':
     config = dotenv_values(".env")
-    main(config['SUBSCRIPTION_LIST'].split(','))
+    main(config['SUBSCRIPTION_LIST'].split(','), sys.argv[1])
