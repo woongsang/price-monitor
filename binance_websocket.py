@@ -120,7 +120,7 @@ def update_prices(ws, data):
     }
     print(parsed_data)
 
-    producer.send(parsed_data['market'], value=json.dumps(parsed_data).encode('utf-8'))
+    producer.send(config['EXCHANGE'], value=json.dumps(parsed_data).encode('utf-8'))
     producer.flush()
     exec(f"mongo_client.{config['EXCHANGE']}.{parsed_data['market']}.insert_one({parsed_data})")
 
